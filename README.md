@@ -14,6 +14,7 @@
 ## Screenshots
 
 ![Screenshot Emacs 28.2](assets/scshot-tesla.png)
+![Screenshot Emacs 29.3](assets/scshot-glaurung.png)
 
 ## Features
 
