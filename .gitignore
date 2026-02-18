@@ -1,0 +1,19 @@
+# Econky Project - Git Ignore
+
+# Arquivos compilados do Emacs
+*.elc
+
+# Arquivos temporários e de backup
+*~
+\#*\#
+.\#*
+
+# Arquivos de estado e customização local
+.dir-locals.el
+custom.el
+
+# Diretórios de pacotes locais (caso existam)
+elpa/
+
+# Arquivos de log 
+*.log

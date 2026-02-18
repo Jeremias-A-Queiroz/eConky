@@ -1,0 +1,13 @@
+
+econky.el,399
+(defvar econky-timer 49,1384
+(defvar symon-linux--last-cpu-ticks 50,1410
+(defvar symon-linux--last-net-ticks 51,1451
+(defun econky--bar 55,1528
+(defun econky--get-ip 67,2031
+(defun econky--fetch-battery 96,3382
+(defun econky--fetch-net 104,3698
+(defun econky-render 113,4010
+(defun econky-start 157,5906
+(defun econky-stop 163,6046
+(defun symon-linux-network-monitor-fetch-logic 172,6224
