@@ -13,7 +13,7 @@
 
 ;; Author: Jeremias-A-Queiroz
 ;; URL: github.com:Jeremias-A-Queiroz/econky.git
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-Requires: ((symon "1.2.1"))
 
 ;;; Commentary:
@@ -40,6 +40,12 @@
 ;; - Integrated IPv6/IPv4 multi-interface table.
 ;; - Added smart battery detection.
 ;; - Precise column alignment for network interfaces.
+
+;; 0.1.2 (2026-02-19)
+;; - Add Symon CPU and memory monitoring
+;; - Integrate dedicated functions for fetching CPU and memory usage
+;;   statistics, extracted from the Symon monitoring system. This allows
+;;   Econky to display more detailed system metrics.
 
 ;;; Code:
 
@@ -107,6 +113,38 @@
     (if (and net (consp net))
         (format "D: %4d kb/s U: %4d kb/s" (or (car net) 0) (or (cdr net) 0))
       "Calculando rede...")))
+
+;; --- Backend de métricas ---
+(defun symon-linux-cpu-monitor-fetch-logic ()
+  "Lógica de CPU extraída do monitor do Symon para uso no Econky."
+  (let ((cpu-data (symon-linux--read-lines
+                   "/proc/stat" 
+                   (lambda (str) (mapcar 'read (split-string str nil t))) 
+                   '("cpu"))))
+    (when cpu-data
+      (cl-destructuring-bind (cpu) cpu-data
+        (let ((total (apply '+ cpu)) 
+              (idle (nth 3 cpu)))
+          (prog1 
+              (when symon-linux--last-cpu-ticks
+                (let ((total-diff (- total (car symon-linux--last-cpu-ticks)))
+                      (idle-diff (- idle (cdr symon-linux--last-cpu-ticks))))
+                  (if (zerop total-diff)
+                      0
+                    (/ (* (- total-diff idle-diff) 100) total-diff))))
+            (setq symon-linux--last-cpu-ticks (cons total idle))))))))
+
+
+(defun symon-linux-memory-monitor-fetch-logic ()
+  "Lógica de memória extraída do Symon para uso no Econky."
+  (cl-destructuring-bind (memtotal memavailable memfree buffers cached)
+      (symon-linux--read-lines
+       "/proc/meminfo" (lambda (str) (and str (read str)))
+       '("MemTotal:" "MemAvailable:" "MemFree:" "Buffers:" "Cached:"))
+    (if memavailable
+        (/ (* (- memtotal memavailable) 100) memtotal)
+      (/ (* (- memtotal (+ memfree buffers cached)) 100) memtotal))))
+
 
 ;; --- O Renderizador Principal ---
 
