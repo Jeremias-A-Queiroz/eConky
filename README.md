@@ -1,5 +1,19 @@
-# Econky: The Linux Power-User Dashboard for Emacs
- **Econky** (Emacs-Conky) is a lightweight, side-buffer system monitor for GNU Emacs, heavily inspired by the classic Linux Conky. It provides a real-time, high-fidelity overview of your system's health, networking, and power status, specifically optimized for multi-interface laptop setups.
+# eConky: The Linux Power-User Dashboard for Emacs
+ **eConky** (Emacs-Conky) is a lightweight, side-buffer system monitor
+ for GNU Emacs, heavily inspired by the classic Linux Conky. It
+ provides a real-time, high-fidelity overview of your system's health,
+ networking, and power status, specifically optimized for
+ multi-interface laptop setups.
+ 
+ ![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
+ [![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey.svg?style=flat&logo=linux)](https://www.kernel.org)
+
+ [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+ [![Repo Size](https://img.shields.io/github/repo-size/Jeremias-A-Queiroz/econky)](https://github.com/Jeremias-A-Queiroz/econky)
+
+## Screenshots
+
+![Screenshot Emacs 28.2](assets/scshot-tesla.png)
 
 ## Features
 
@@ -13,12 +27,12 @@
 
 ### Prerequisites
 
-Econky depends on the `symon` package for its core metric collection.
+eConky depends on the `symon` package for its core metric collection.
 
 1. Ensure you have `symon` installed: `M-x package-install RET symon RET`.
 2. Clone this repository into your load path:
    ```bash
-   git clone [https://github.com/seu-usuario/econky.git](https://github.com/seu-usuario/econky.git) ~/.emacs.d/lisp/econky
+   git clone [https://github.com/Jeremias-A-Queiroz/econky.git](https://github.com/Jeremias-A-Queiroz/econky.git) ~/.emacs.d/lisp/econky
    ```
 
 ### Basic Configuration
@@ -42,16 +56,16 @@ Add the following to your `init.el`:
 
 ## Pro Setup: The 80/20 Layout (emacsclient)
 
-A common use case for Econky is to have it automatically appear when opening a new Emacs frame via `emacsclient -c`, creating a dedicated system monitoring area.
+A common use case for eConky is to have it automatically appear when opening a new Emacs frame via `emacsclient -c`, creating a dedicated system monitoring area.
 
-Add the following hook to your `init.el`. It ensures that when a new frame is created, the window is split: **80%** for your work (`*scratch*` or current buffer) and **20%** pinned on the right for **Econky**.
+Add the following hook to your `init.el`. It ensures that when a new frame is created, the window is split: **80%** for your work (`*scratch*` or current buffer) and **20%** pinned on the right for **eConky**.
 
 ```elisp
 (defun my/setup-econky-frame (frame)
   "Configura o layout 80/20 ao abrir um novo frame via emacsclient."
   (with-selected-frame frame
     (let ((econky-buffer (get-buffer-create "*econky*")))
-      ;; 1. Inicia o timer do Econky caso não esteja rodando
+      ;; 1. Inicia o timer do eConky caso não esteja rodando
       (econky-start)
       
       ;; 2. Divide a janela: 80% esquerda, 20% direita
@@ -60,11 +74,11 @@ Add the following hook to your `init.el`. It ensures that when a new frame is cr
         ;; 3. Garante o foco no scratch à esquerda
         (switch-to-buffer "*scratch*")
         
-        ;; 4. Exibe o Econky na janela da direita
+        ;; 4. Exibe o eConky na janela da direita
         (set-window-buffer window-side econky-buffer)
         
         ;; 5. Torna a janela 'dedicada' para evitar que outros 
-       ;; buffers ocupem o lugar do Econky
+       ;; buffers ocupem o lugar do eConky
         (set-window-dedicated-p window-side t)))))
 
 ;; Ativa o layout apenas para novos frames criados (ex: emacsclient -c)
